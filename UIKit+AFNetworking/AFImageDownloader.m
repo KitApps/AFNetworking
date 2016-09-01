@@ -186,6 +186,15 @@
                                                   withReceiptID:(nonnull NSUUID *)receiptID
                                                         success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse  * _Nullable response, UIImage *responseObject))success
                                                         failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure {
+    return [self downloadImageForURLRequest:request withReceiptID:receiptID progress:nil success:success failure:failure];
+}
+
+- (nullable AFImageDownloadReceipt *)downloadImageForURLRequest:(NSURLRequest *)request
+                                                  withReceiptID:(nonnull NSUUID *)receiptID
+                                                       progress:(nullable void (^)(NSProgress *downloadProgress))progress
+                                                        success:(nullable void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, UIImage * _Nonnull))success
+                                                        failure:(nullable void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, NSError * _Nonnull))failure
+{
     __block NSURLSessionDataTask *task = nil;
     dispatch_sync(self.synchronizationQueue, ^{
         NSString *URLIdentifier = request.URL.absoluteString;
@@ -236,7 +245,7 @@
         createdTask = [self.sessionManager
                        dataTaskWithRequest:request
                        uploadProgress:nil
-                       downloadProgress:nil
+                       downloadProgress:progress
                        completionHandler:^(NSURLResponse * _Nonnull response, id  _Nullable responseObject, NSError * _Nullable error) {
                            dispatch_async(self.responseQueue, ^{
                                __strong __typeof__(weakSelf) strongSelf = weakSelf;

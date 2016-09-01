@@ -142,6 +142,29 @@ typedef NS_ENUM(NSInteger, AFImageDownloadPrioritization) {
                                                         failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError *error))failure;
 
 /**
+ Creates a data task using the `sessionManager` instance for the specified URL request.
+ 
+ If the same data task is already in the queue or currently being downloaded, the success and failure blocks are
+ appended to the already existing task. Once the task completes, all success or failure blocks attached to the
+ task are executed in the order they were added.
+ 
+ @param request The URL request.
+ @param receiptID The identifier to use for the download receipt that will be created for this request. This must be a unique identifier that does not represent any other request.
+ @param progress A block object to be executed when the download progress is updated. Note this block is called on the session queue, not the main queue.
+ @param success A block to be executed when the image data task finishes successfully. This block has no return value and takes three arguments: the request sent from the client, the response received from the server, and the image created from the response data of request. If the image was returned from cache, the response parameter will be `nil`.
+ @param failure A block object to be executed when the image data task finishes unsuccessfully, or that finishes successfully. This block has no return value and takes three arguments: the request sent from the client, the response received from the server, and the error object describing the network or parsing error that occurred.
+ 
+ @return The image download receipt for the data task if available. `nil` if the image is stored in the cache.
+ cache and the URL request cache policy allows the cache to be used.
+ */
+
+- (nullable AFImageDownloadReceipt *)downloadImageForURLRequest:(NSURLRequest *)request
+                                                  withReceiptID:(nonnull NSUUID *)receiptID
+                                                       progress:(nullable void (^)(NSProgress *downloadProgress))progress
+                                                        success:(nullable void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, UIImage * _Nonnull))success
+                                                        failure:(nullable void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, NSError * _Nonnull))failure;
+
+/**
  Cancels the data task in the receipt by removing the corresponding success and failure blocks and cancelling the data task if necessary.
 
  If the data task is pending in the queue, it will be cancelled if no other success and failure blocks are registered with the data task. If the data task is currently executing or is already completed, the success and failure blocks are removed and will not be called when the task finishes.
