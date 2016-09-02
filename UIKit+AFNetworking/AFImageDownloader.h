@@ -161,8 +161,8 @@ typedef NS_ENUM(NSInteger, AFImageDownloadPrioritization) {
 - (nullable AFImageDownloadReceipt *)downloadImageForURLRequest:(NSURLRequest *)request
                                                   withReceiptID:(nonnull NSUUID *)receiptID
                                                        progress:(nullable void (^)(NSProgress *downloadProgress))progress
-                                                        success:(nullable void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, UIImage * _Nonnull))success
-                                                        failure:(nullable void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, NSError * _Nonnull))failure;
+                                                        success:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, UIImage * _Nonnull image))success
+                                                        failure:(nullable void (^)(NSURLRequest *request, NSHTTPURLResponse * _Nullable response, NSError * _Nonnull error))failure;
 
 /**
  Cancels the data task in the receipt by removing the corresponding success and failure blocks and cancelling the data task if necessary.

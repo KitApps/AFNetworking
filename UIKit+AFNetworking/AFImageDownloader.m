@@ -191,7 +191,7 @@
 
 - (nullable AFImageDownloadReceipt *)downloadImageForURLRequest:(NSURLRequest *)request
                                                   withReceiptID:(nonnull NSUUID *)receiptID
-                                                       progress:(nullable void (^)(NSProgress *downloadProgress))progress
+                                                       progress:(nullable void (^)(NSProgress *))progress
                                                         success:(nullable void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, UIImage * _Nonnull))success
                                                         failure:(nullable void (^)(NSURLRequest * _Nonnull, NSHTTPURLResponse * _Nullable, NSError * _Nonnull))failure
 {
