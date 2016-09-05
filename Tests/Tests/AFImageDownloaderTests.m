@@ -199,6 +199,30 @@
 
 }
 
+- (void)testThatDownloadProgressWorks {
+    XCTestExpectation *expectation = [self expectationWithDescription:@"image download progress should be shown"];
+    
+    [self.downloader downloadImageForURLRequest:self.pngRequest withReceiptID:[NSUUID UUID] progress:^(NSProgress * _Nonnull downloadProgress) {
+        [expectation fulfill];
+    } success:nil failure:nil];
+    [self waitForExpectationsWithCommonTimeoutUsingHandler:nil];
+}
+
+- (void)testThatDownloadProgressWorksForMultipleRequests {
+    XCTestExpectation *expectation1 = [self expectationWithDescription:@"image 1 progress should be shown"];
+    
+    [self.downloader downloadImageForURLRequest:self.pngRequest withReceiptID:[NSUUID UUID] progress:^(NSProgress * _Nonnull downloadProgress) {
+        [expectation1 fulfill];
+    } success:nil failure:nil];
+    
+    XCTestExpectation *expectation2 = [self expectationWithDescription:@"image 2 progress should be shown"];
+    
+    [self.downloader downloadImageForURLRequest:self.pngRequest withReceiptID:[NSUUID UUID] progress:^(NSProgress * _Nonnull downloadProgress) {
+        [expectation2 fulfill];
+    } success:nil failure:nil];
+    [self waitForExpectationsWithCommonTimeoutUsingHandler:nil];
+}
+
 #pragma mark - Caching
 - (void)testThatResponseIsNilWhenReturnedFromCache {
     XCTestExpectation *expectation1 = [self expectationWithDescription:@"image 1 download should succeed"];
