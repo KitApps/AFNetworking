@@ -249,13 +249,15 @@
                        dataTaskWithRequest:request
                        uploadProgress:nil
                        downloadProgress:^(NSProgress *downloadProgress) {
-                           dispatch_async(self.responseQueue, ^{
+                           dispatch_async(self.synchronizationQueue, ^{
                                __strong __typeof__(weakSelf) strongSelf = weakSelf;
                                AFImageDownloaderMergedTask *mergedTask = strongSelf.mergedTasks[URLIdentifier];
                                if ([mergedTask.identifier isEqual:mergedTaskIdentifier]) {
                                    for (AFImageDownloaderResponseHandler *handler in mergedTask.responseHandlers) {
                                        if (handler.progressBlock) {
-                                           handler.progressBlock(downloadProgress);
+                                           dispatch_async(self.responseQueue, ^{
+                                               handler.progressBlock(downloadProgress);
+                                           });
                                        }
                                    }
                                }
